@@ -1,0 +1,21 @@
+﻿@page "/dishes"
+@inject IGeneralService GeneralService
+
+<h3>Dishes Overview</h3>
+
+@if(dishes != null)
+{
+	foreach(var dish in dishes)
+	{
+		<p>Plat @dish.Name et le prix est : @dish.Price €</p>
+	}
+}
+
+@code {
+	List<Dish> dishes = new List<Dish>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		dishes = await GeneralService.GetAllDishesAsync();
+	}
+}
