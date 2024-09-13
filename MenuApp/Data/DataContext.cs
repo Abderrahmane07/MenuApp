@@ -8,5 +8,7 @@ namespace MenuApp.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
 		public DbSet<Dish> Dishes {  get; set; } 
+		public DbSet<Restaurant> Restaurants {  get; set; } 
+		public DbSet<Category> Categories {  get; set; } 
     }
 }
