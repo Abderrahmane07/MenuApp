@@ -2,12 +2,13 @@
 @inject IGeneralService GeneralService
 
 <h3>Dishes Overview</h3>
+<a class="btn btn-primary" href="/edit-dish">Add Dish</a>
 
 @if(dishes != null)
 {
 	foreach(var dish in dishes)
 	{
-		<p>Plat @dish.Name et le prix est : @dish.Price €</p>
+		<p>Plat @dish.Name et le prix est : @dish.Price € <a class="btn btn-primary" href="/edit-dish/@dish.Id">Edit Dish</a></p>
 	}
 }
 

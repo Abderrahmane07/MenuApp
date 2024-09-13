@@ -1,8 +1,72 @@
 ﻿@page "/edit-dish"
+@page "/edit-dish/{Id:int}"
+@inject IGeneralService GeneralService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 
-<h3>EditDish</h3>
+
+@if(Id is null)
+{
+	<h3>Add Dish</h3>
+}
+else
+{
+	<h3>Edit Dish</h3>
+}
+
+<EditForm Model="CurrentDish" OnSubmit="HandleSubmit">
+	<div>
+		<label for="name">Dish Name</label>
+		<InputText id="name" @bind-Value="CurrentDish.Name" class="form-control" />
+	</div>
+	<div>
+		<label for="price">Dish Price</label>
+		<InputNumber id="price" @bind-Value="CurrentDish.Price" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Save</button>
+	@if(Id is not null)
+	{
+		<button @onclick="DeleteDish" class="btn btn-danger">Delete</button>
+	}	
+</EditForm>
+
 
 @code {
+	[Parameter]
+	public int? Id { get; set; }
+	public Dish CurrentDish { get; set; } = new();
 
+	protected override async Task OnParametersSetAsync()
+	{
+		if(Id is not null)
+		{
+			var dish = await GeneralService.GetDishByIdAsync((int)Id);
+			if(dish != null)
+			{
+				CurrentDish = dish;
+			}
+		}
+	}
+
+	async Task DeleteDish()
+	{
+		await GeneralService.DeleteDishAsync((int) Id!);
+		NavigationManager.NavigateTo("/dishes");
+	}
+
+	async Task HandleSubmit()
+	{
+		if(Id is not null)
+		{
+			await GeneralService.UpdateDishAsync(CurrentDish,(int) Id);
+			NavigationManager.NavigateTo("/dishes");
+		}
+		else
+		{
+			await GeneralService.AddDishAsync(CurrentDish);
+			NavigationManager.NavigateTo("/dishes");
+		}
+	}
 }
