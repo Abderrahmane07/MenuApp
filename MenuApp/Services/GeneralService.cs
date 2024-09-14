@@ -52,7 +52,7 @@ namespace MenuApp.Services
 			if (dbDish != null)
 			{
 				dbDish.Name = dish.Name; 
-				dbDish.Price = dish.Price; 
+				//dbDish.Price = dish.Price; 
 
 				await context.SaveChangesAsync();
 			}

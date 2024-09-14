@@ -10,5 +10,6 @@ namespace MenuApp.Data
 		public DbSet<Dish> Dishes {  get; set; } 
 		public DbSet<Restaurant> Restaurants {  get; set; } 
 		public DbSet<Category> Categories {  get; set; } 
+		public DbSet<Price> Prices {  get; set; } 
     }
 }
