@@ -1,0 +1,39 @@
+﻿@page "/restaurants"
+@inject IGeneralService GeneralService
+
+
+<h3>Restaurant Overview</h3>
+
+@if(restaurants != null)
+{
+    <div class="row">
+        @foreach (var restaurant in restaurants)
+        {
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card h-100">
+                    <img class="card-img-top" src="/default.jpg" alt="default">
+                    <div class="card-body">
+                        <h5 class="card-title">@restaurant.Name</h5>
+                        <p class="card-text">@restaurant.Description</p>
+                        <p class="card-text">
+                            <strong>Address:</strong> @restaurant.Address<br />
+                            <strong>Phone:</strong> @restaurant.PhoneNumber<br />
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+	List<Restaurant> restaurants = new List<Restaurant>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		restaurants = await GeneralService.GetAllRestaurantsAsync();
+	}
+}

@@ -57,5 +57,13 @@ namespace MenuApp.Services
 				await context.SaveChangesAsync();
 			}
 		}
+
+
+		public async Task<List<Restaurant>> GetAllRestaurantsAsync()
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var result = await context.Restaurants.ToListAsync();
+			return result;
+		}
 	}
 }
