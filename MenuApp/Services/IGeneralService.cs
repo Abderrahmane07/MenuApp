@@ -14,5 +14,6 @@ namespace MenuApp.Services
 		Task AddRestaurantAsync(Restaurant restaurant);
 		Task UpdateRestaurantAsync(Restaurant restaurant, int id);
 		Task DeleteRestaurantAsync(int id);
-	}
+        Task<List<Category>> GetAllCategoriesByRestaurantIdAsync(int id);
+    }
 }

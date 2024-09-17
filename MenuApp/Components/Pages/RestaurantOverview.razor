@@ -4,6 +4,8 @@
 
 <h3>Restaurant Overview</h3>
 
+<a href="/edit-restaurant" class="btn btn-primary">Add a new Restaurant</a>
+
 @if(restaurants != null)
 {
     <div class="row">
@@ -21,7 +23,8 @@
                         </p>
                     </div>
                     <div class="card-footer">
-                        <a href="/edit-restaurant/@restaurant.Id" class="btn btn-primary">View Details</a>
+                        <a href="/edit-restaurant/@restaurant.Id" class="btn btn-primary">Edit Restaurant</a>
+                        <a href="/menu/@restaurant.Id" class="btn btn-secondary">Menu</a>
                     </div>
                 </div>
             </div>

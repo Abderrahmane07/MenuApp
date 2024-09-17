@@ -1,0 +1,154 @@
+﻿@page "/menu/{Id:int}"
+@inject IGeneralService GeneralService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h3>Menu Categories</h3>
+
+@if (categories != null && categories.Any())
+{
+    <ul class="list-group">
+        @foreach (var category in categories.Where(c => c.ParentCategoryId == null))
+        {
+            <li class="list-group-item">
+                @DisplayCategory(category)
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No categories available.</p>
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    List<Category> categories = new List<Category>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            categories = await GeneralService.GetAllCategoriesByRestaurantIdAsync((int)Id);
+        }
+    }
+
+    RenderFragment DisplayCategory(Category category) => @<div class="category-container">
+        <strong>@category.Name</strong>: @category.Description
+        @if (categories.Any(c => c.ParentCategoryId == category.Id))
+    {
+        <ul class="list-group mt-2">
+            @foreach (var childCategory in categories.Where(c => c.ParentCategoryId == category.Id))
+        {
+            <li class="list-group-item">
+                @DisplayCategory(childCategory)
+            </li>
+        }
+        </ul>
+    }
+    </div>;
+}
+
+
+
+
+
+
+@* 
+
+@page "/menu/{Id:int}"
+@inject IGeneralService GeneralService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h3>Menu Categories</h3>
+
+@if (categories.Count > 0)
+{
+    <div class="accordion" id="categoryAccordion">
+        @foreach (var parentCategory in categories.Where(c => c.ParentCategoryId == null))
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading@parentCategory.Id">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@parentCategory.Id" aria-expanded="true" aria-controls="collapse@parentCategory.Id">
+                        @parentCategory.Name
+                    </button>
+                </h2>
+                <div id="collapse@parentCategory.Id" class="accordion-collapse collapse show" aria-labelledby="heading@parentCategory.Id" data-bs-parent="#categoryAccordion">
+                    <div class="accordion-body">
+                        <p>@parentCategory.Description</p>
+                        <p><strong>Restaurant ID:</strong> @parentCategory.RestaurantId</p>
+
+                        @if (categories.Any(c => c.ParentCategoryId == parentCategory.Id))
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var childCategory in categories.Where(c => c.ParentCategoryId == parentCategory.Id))
+                                {
+                                    <li class="list-group-item">
+                                        <strong>@childCategory.Name:</strong> @childCategory.Description
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No categories available.</p>
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    List<Category> categories = new List<Category>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            categories = await GeneralService.GetAllCategoriesByRestaurantIdAsync((int)Id);
+        }
+    }
+}
+ *@
+
+
+
+@* 
+@page "/menu/{Id:int}"
+@inject IGeneralService GeneralService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+<h3>Menu</h3>
+
+
+@foreach (var catego in categories)
+{
+	<p>Name : @catego.Name</p>
+	<p>Description : @catego.Description</p>
+	<p>ParentCategoryId : @catego.ParentCategoryId</p>
+	<p>RestaurantId : @catego.RestaurantId</p>
+}
+
+
+@code {
+	[Parameter]
+	public int? Id { get; set; }
+	List<Category> categories = new List<Category>();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (Id is not null)
+		{
+			categories = await GeneralService.GetAllCategoriesByRestaurantIdAsync((int)Id);
+		}
+	}
+}
+ *@

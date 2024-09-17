@@ -115,5 +115,12 @@ namespace MenuApp.Services
 		}
 
 
-	}
+		public async Task<List<Category>> GetAllCategoriesByRestaurantIdAsync(int id)
+		{
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var categories = await context.Categories.Where(c => c.RestaurantId == id).ToListAsync();
+			return categories;
+        }
+
+    }
 }
