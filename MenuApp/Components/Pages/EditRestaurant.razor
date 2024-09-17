@@ -1,0 +1,89 @@
+﻿@page "/edit-restaurant"
+@page "/edit-restaurant/{Id:int}"
+@inject IGeneralService GeneralService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+
+@if (Id is null)
+{
+	<h3>Add Restaurant</h3>
+}
+else
+{
+	<h3>Edit Restaurant</h3>
+}
+
+<EditForm Model="CurrentRestaurant" OnSubmit="HandleSubmit">
+	<div>
+		<label for="name">Restaurant Name</label>
+		<InputText id="name" @bind-Value="CurrentRestaurant.Name" class="form-control" />
+	</div>
+	<div>
+		<label for="name">Restaurant Description</label>
+		<InputText id="name" @bind-Value="CurrentRestaurant.Description" class="form-control" />
+	</div>
+	<div>
+		<label for="name">Restaurant Address</label>
+		<InputText id="name" @bind-Value="CurrentRestaurant.Address" class="form-control" />
+	</div>
+	<div>
+		<label for="name">Restaurant PhoneNumber</label>
+		<InputText id="name" @bind-Value="CurrentRestaurant.PhoneNumber" class="form-control" />
+	</div>
+	<div>
+		<label for="name">Restaurant Website</label>
+		<InputText id="name" @bind-Value="CurrentRestaurant.Website" class="form-control" />
+	</div>
+	<div>
+		<label for="name">Restaurant Email</label>
+		<InputText id="name" @bind-Value="CurrentRestaurant.Email" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Save</button>
+	@if (Id is not null)
+	{
+		<button @onclick="DeleteRestaurant" class="btn btn-danger">Delete</button>
+	}
+</EditForm>
+
+
+@code {
+	[Parameter]
+	public int? Id { get; set; }
+	public Restaurant CurrentRestaurant { get; set; } = new();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (Id is not null)
+		{
+			var restaurant = await GeneralService.GetRestaurantByIdAsync((int)Id);
+			if (restaurant != null)
+			{
+				CurrentRestaurant = restaurant;
+			}
+		}
+	}
+
+	async Task DeleteRestaurant()
+	{
+		await GeneralService.DeleteRestaurantAsync((int)Id!);
+		NavigationManager.NavigateTo("/restaurants");
+	}
+
+	async Task HandleSubmit()
+	{
+		if (Id is not null)
+		{
+			await GeneralService.UpdateRestaurantAsync(CurrentRestaurant, (int)Id);
+			NavigationManager.NavigateTo("/restaurants");
+		}
+		else
+		{
+			await GeneralService.AddRestaurantAsync(CurrentRestaurant);
+			NavigationManager.NavigateTo("/restaurants");
+		}
+	}
+}
+

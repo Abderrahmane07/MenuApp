@@ -13,24 +13,6 @@ namespace MenuApp.Services
 			_contextFactory = contextFactory;
 		}
 
-		public async Task AddDishAsync(Dish dish)
-		{
-			using var context = await _contextFactory.CreateDbContextAsync();
-			context.Dishes.Add(dish);	
-			await context.SaveChangesAsync();
-		}
-
-		public async Task DeleteDishAsync(int id)
-		{
-			using var context = await _contextFactory.CreateDbContextAsync();
-			var dish = await context.Dishes.FindAsync(id);
-            if (dish != null)
-			{
-				context.Dishes.Remove(dish);
-				await context.SaveChangesAsync();
-			}
-        }
-
 		public async Task<List<Dish>> GetAllDishesAsync()
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -45,6 +27,13 @@ namespace MenuApp.Services
 			return dish;
 		}
 
+		public async Task AddDishAsync(Dish dish)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			context.Dishes.Add(dish);	
+			await context.SaveChangesAsync();
+		}		
+
 		public async Task UpdateDishAsync(Dish dish, int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -58,6 +47,16 @@ namespace MenuApp.Services
 			}
 		}
 
+		public async Task DeleteDishAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var dish = await context.Dishes.FindAsync(id);
+			if (dish != null)
+			{
+				context.Dishes.Remove(dish);
+				await context.SaveChangesAsync();
+			}
+		}
 
 		public async Task<List<Restaurant>> GetAllRestaurantsAsync()
 		{
@@ -65,5 +64,56 @@ namespace MenuApp.Services
 			var result = await context.Restaurants.ToListAsync();
 			return result;
 		}
+
+		public async Task<List<Restaurant>> GetAllRestaurantesAsync()
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var result = await context.Restaurants.ToListAsync();
+			return result;
+		}
+
+		public async Task<Restaurant> GetRestaurantByIdAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var restaurant = await context.Restaurants.FindAsync(id);
+			return restaurant;
+		}
+
+		public async Task AddRestaurantAsync(Restaurant restaurant)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			context.Restaurants.Add(restaurant);
+			await context.SaveChangesAsync();
+		}
+
+		public async Task UpdateRestaurantAsync(Restaurant restaurant, int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var dbRestaurant = await context.Restaurants.FindAsync(id);
+			if (dbRestaurant != null)
+			{
+				dbRestaurant.Name = restaurant.Name;
+				dbRestaurant.Description = restaurant.Description;
+				dbRestaurant.Address = restaurant.Address;
+				dbRestaurant.PhoneNumber = restaurant.PhoneNumber;
+				dbRestaurant.Website = restaurant.Website;
+				dbRestaurant.Email = restaurant.Email;
+
+				await context.SaveChangesAsync();
+			}
+		}
+
+		public async Task DeleteRestaurantAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var restaurant = await context.Restaurants.FindAsync(id);
+			if (restaurant != null)
+			{
+				context.Restaurants.Remove(restaurant);
+				await context.SaveChangesAsync();
+			}
+		}
+
+
 	}
 }
