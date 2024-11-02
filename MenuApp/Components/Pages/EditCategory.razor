@@ -1,0 +1,84 @@
+﻿@page "/edit-category"
+@page "/edit-category/{Id:int}"
+@inject IGeneralService GeneralService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+<h3>Edit Category</h3>
+
+<EditForm Model="CurrentCategory" OnSubmit="HandleSubmit">
+	<div>
+		<label for="name">Category Name</label>
+		<InputText id="name" @bind-Value="CurrentCategory.Name" class="form-control" />
+	</div>
+	<div>
+		<label for="description">Category Description</label>
+		<InputText id="description" @bind-Value="CurrentCategory.Description" class="form-control" />
+	</div>
+	<div>
+		<label for="parentcategory">Parent Category</label>
+		<InputSelect id="parentcategory" @bind-Value="CurrentCategory.ParentCategoryId" class="form-control" >
+			<option value="">Select an option</option>
+			@foreach(var restCategory in restaurantCategories)
+			{
+				<option value="@restCategory.Id">@restCategory.Name</option>
+			}
+		</InputSelect>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Save</button>
+	@if (Id is not null)
+	{
+		<button @onclick="DeleteCategory" class="btn btn-danger">Delete</button>
+	}
+</EditForm>
+
+
+@code {
+	[Parameter]
+	public int? Id { get; set; }
+	public Category CurrentCategory { get; set; } = new();
+
+	[SupplyParameterFromQuery]
+	public int? RestaurantId { get; set; }
+
+	List<Category> restaurantCategories = new List<Category>();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		restaurantCategories = await GeneralService.GetAllCategoriesByRestaurantIdAsync(3);
+		if (Id is not null)
+		{
+			var category = await GeneralService.GetCategoryByIdAsync((int)Id);
+			if (category != null)
+			{
+				CurrentCategory = category;
+			}
+		}
+	}
+
+	async Task DeleteCategory()
+	{
+		await GeneralService.DeleteCategoryAsync((int)Id!);
+		NavigationManager.NavigateTo("/");
+	}
+
+	async Task HandleSubmit()
+	{
+		if (Id is not null)
+		{
+			await GeneralService.UpdateCategoryAsync(CurrentCategory, (int)Id);
+			NavigationManager.NavigateTo($"/menu/{CurrentCategory.RestaurantId}");
+		}
+		else
+		{
+			if(RestaurantId != null)
+			{
+				CurrentCategory.RestaurantId = (int)RestaurantId;
+				await GeneralService.AddCategoryAsync(CurrentCategory);
+				NavigationManager.NavigateTo($"/menu/{RestaurantId}");
+			}			
+		}
+	}
+}

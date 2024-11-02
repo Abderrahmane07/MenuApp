@@ -122,5 +122,44 @@ namespace MenuApp.Services
 			return categories;
         }
 
-    }
+		public async Task<Category> GetCategoryByIdAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var category = await context.Categories.FindAsync(id);
+			return category;
+		}
+
+		public async Task AddCategoryAsync(Category category)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			context.Categories.Add(category);
+			await context.SaveChangesAsync();
+		}
+
+		public async Task UpdateCategoryAsync(Category category, int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var dbCategory = await context.Categories.FindAsync(id);
+			if (dbCategory != null)
+			{
+				dbCategory.Name = category.Name;
+				dbCategory.Description = category.Description;
+				dbCategory.ParentCategoryId = category.ParentCategoryId;
+
+				await context.SaveChangesAsync();
+			}
+		}
+
+		public async Task DeleteCategoryAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var category = await context.Categories.FindAsync(id);
+			if (category != null)
+			{
+				context.Categories.Remove(category);
+				await context.SaveChangesAsync();
+			}
+		}
+
+	}
 }
