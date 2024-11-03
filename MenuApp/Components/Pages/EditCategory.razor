@@ -46,8 +46,7 @@
 	List<Category> restaurantCategories = new List<Category>();
 
 	protected override async Task OnParametersSetAsync()
-	{
-		restaurantCategories = await GeneralService.GetAllCategoriesByRestaurantIdAsync(3);
+	{		
 		if (Id is not null)
 		{
 			var category = await GeneralService.GetCategoryByIdAsync((int)Id);
@@ -56,6 +55,7 @@
 				CurrentCategory = category;
 			}
 		}
+		restaurantCategories = await GeneralService.GetAllCategoriesByRestaurantIdAsync(RestaurantId ?? CurrentCategory.RestaurantId);
 	}
 
 	async Task DeleteCategory()

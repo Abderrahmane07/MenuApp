@@ -20,10 +20,20 @@ else
 		<label for="name">Dish Name</label>
 		<InputText id="name" @bind-Value="CurrentDish.Name" class="form-control" />
 	</div>
-	@* <div>
-		<label for="price">Dish Price</label>
-		<InputNumber id="price" @bind-Value="CurrentDish.Price" class="form-control" />
-	</div> *@
+	<div>
+		<label for="ingredients">Ingredients</label>
+		<InputText id="ingredients" @bind-Value="CurrentDish.Ingredients" class="form-control" />
+	</div>
+	<div>
+		<label for="dishtcategory">Dish Category</label>
+		<InputSelect id="dishtcategory" @bind-Value="CurrentDish.CategoryId" class="form-control">
+			<option value="">Select an option</option>
+			@foreach (var restCategory in restaurantCategories)
+			{
+				<option value="@restCategory.Id">@restCategory.Name</option>
+			}
+		</InputSelect>
+	</div>
 
 	<button type="submit" class="btn btn-primary">Save</button>
 	@if(Id is not null)
@@ -38,6 +48,11 @@ else
 	public int? Id { get; set; }
 	public Dish CurrentDish { get; set; } = new();
 
+	[SupplyParameterFromQuery]
+	public int? RestaurantId { get; set; }
+
+	List<Category> restaurantCategories = new List<Category>();
+
 	protected override async Task OnParametersSetAsync()
 	{
 		if(Id is not null)
@@ -48,6 +63,7 @@ else
 				CurrentDish = dish;
 			}
 		}
+		restaurantCategories = await GeneralService.GetAllCategoriesByRestaurantIdAsync(RestaurantId ?? CurrentDish.RestaurantId);
 	}
 
 	async Task DeleteDish()

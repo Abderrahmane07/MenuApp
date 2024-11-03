@@ -44,8 +44,9 @@ namespace MenuApp.Services
 			var dbDish = await context.Dishes.FindAsync(id);
 			if (dbDish != null)
 			{
-				dbDish.Name = dish.Name; 
-				//dbDish.Price = dish.Price; 
+				dbDish.Name = dish.Name;
+				dbDish.Ingredients = dish.Ingredients;
+				dbDish.CategoryId = dish.CategoryId;
 
 				await context.SaveChangesAsync();
 			}
