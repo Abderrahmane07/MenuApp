@@ -24,9 +24,9 @@ else
 }
 
 @code {
-    [Parameter]
-    public int? Id { get; set; }
-    List<Category> categories = new List<Category>();
+        [Parameter]
+        public int? Id { get; set; }
+        List<Category> categories = new List<Category>();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -36,20 +36,22 @@ else
         }
     }
 
-    RenderFragment DisplayCategory(Category category) => @<div class="category-container">
-        <strong>@category.Name</strong>: @category.Description
-        @if (categories.Any(c => c.ParentCategoryId == category.Id))
-    {
-        <ul class="list-group mt-2">
-            @foreach (var childCategory in categories.Where(c => c.ParentCategoryId == category.Id))
-        {
-            <li class="list-group-item">
-                @DisplayCategory(childCategory)
-            </li>
-        }
-        </ul>
-    }
+    RenderFragment DisplayCategory(Category category) {
+        return @<div class="category-container">
+            <strong>@category.Name (<a href="/edit-category/@category.Id">edit</a>)</strong>: @category.Description
+            @if (categories.Any(c => c.ParentCategoryId == category.Id))
+            {
+                <ul class="list-group mt-2">
+                    @foreach (var childCategory in categories.Where(c => c.ParentCategoryId == category.Id))
+                    {
+                        <li class="list-group-item">
+                            @DisplayCategory(childCategory)
+                        </li>
+                    }
+                </ul>
+            }
     </div>;
+    }
 }
 
 
