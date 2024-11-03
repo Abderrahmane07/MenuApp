@@ -27,18 +27,35 @@ else
         [Parameter]
         public int? Id { get; set; }
         List<Category> categories = new List<Category>();
+        List<Dish> dishes = new List<Dish>();
 
     protected override async Task OnParametersSetAsync()
     {
         if (Id is not null)
         {
             categories = await GeneralService.GetAllCategoriesByRestaurantIdAsync((int)Id);
+            dishes = await GeneralService.GetAllDishesByRestaurantIdAsync((int)Id);
         }
     }
 
     RenderFragment DisplayCategory(Category category) {
         return @<div class="category-container">
             <strong>@category.Name (<a href="/edit-category/@category.Id">edit</a>)</strong>: @category.Description
+            @if (dishes.Any(d => d.CategoryId == category.Id))
+            {
+                <ul>
+                    @foreach (var dish in dishes.Where(d => d.CategoryId == category.Id))
+                    {
+                        <li>
+                            <div>
+                                <strong>@dish.Name</strong>
+                                <span class="text-muted">@dish.Ingredients</span>
+                                <a href="/edit-dish/@dish.Id" class="btn btn-sm btn-outline-primary ms-2">edit</a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
             @if (categories.Any(c => c.ParentCategoryId == category.Id))
             {
                 <ul class="list-group mt-2">

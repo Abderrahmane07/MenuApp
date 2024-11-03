@@ -13,27 +13,31 @@ namespace MenuApp.Services
 			_contextFactory = contextFactory;
 		}
 
+
 		public async Task<List<Dish>> GetAllDishesAsync()
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			var result = await context.Dishes.ToListAsync();
 			return result;
 		}
-
+		public async Task<List<Dish>> GetAllDishesByRestaurantIdAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var dishes = await context.Dishes.Where(d => d.RestaurantId == id).ToListAsync();
+			return dishes;
+		}
 		public async Task<Dish> GetDishByIdAsync(int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			var dish = await context.Dishes.FindAsync(id);
 			return dish;
 		}
-
 		public async Task AddDishAsync(Dish dish)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			context.Dishes.Add(dish);	
 			await context.SaveChangesAsync();
-		}		
-
+		}
 		public async Task UpdateDishAsync(Dish dish, int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -46,7 +50,6 @@ namespace MenuApp.Services
 				await context.SaveChangesAsync();
 			}
 		}
-
 		public async Task DeleteDishAsync(int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -58,34 +61,25 @@ namespace MenuApp.Services
 			}
 		}
 
+
 		public async Task<List<Restaurant>> GetAllRestaurantsAsync()
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			var result = await context.Restaurants.ToListAsync();
 			return result;
 		}
-
-		public async Task<List<Restaurant>> GetAllRestaurantesAsync()
-		{
-			using var context = await _contextFactory.CreateDbContextAsync();
-			var result = await context.Restaurants.ToListAsync();
-			return result;
-		}
-
 		public async Task<Restaurant> GetRestaurantByIdAsync(int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			var restaurant = await context.Restaurants.FindAsync(id);
 			return restaurant;
 		}
-
 		public async Task AddRestaurantAsync(Restaurant restaurant)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			context.Restaurants.Add(restaurant);
 			await context.SaveChangesAsync();
 		}
-
 		public async Task UpdateRestaurantAsync(Restaurant restaurant, int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -102,7 +96,6 @@ namespace MenuApp.Services
 				await context.SaveChangesAsync();
 			}
 		}
-
 		public async Task DeleteRestaurantAsync(int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -121,21 +114,18 @@ namespace MenuApp.Services
             var categories = await context.Categories.Where(c => c.RestaurantId == id).ToListAsync();
 			return categories;
         }
-
 		public async Task<Category> GetCategoryByIdAsync(int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			var category = await context.Categories.FindAsync(id);
 			return category;
 		}
-
 		public async Task AddCategoryAsync(Category category)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			context.Categories.Add(category);
 			await context.SaveChangesAsync();
 		}
-
 		public async Task UpdateCategoryAsync(Category category, int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -149,7 +139,6 @@ namespace MenuApp.Services
 				await context.SaveChangesAsync();
 			}
 		}
-
 		public async Task DeleteCategoryAsync(int id)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
@@ -160,6 +149,8 @@ namespace MenuApp.Services
 				await context.SaveChangesAsync();
 			}
 		}
+
+
 
 	}
 }
