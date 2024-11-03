@@ -1,4 +1,4 @@
-﻿@page "/dishes"
+﻿@* @page "/dishes"
 @inject IGeneralService GeneralService
 
 <h3>Dishes Overview</h3>
@@ -20,3 +20,4 @@
 		dishes = await GeneralService.GetAllDishesAsync();
 	}
 }
+ *@

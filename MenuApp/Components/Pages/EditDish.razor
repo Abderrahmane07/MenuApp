@@ -63,13 +63,17 @@ else
 				CurrentDish = dish;
 			}
 		}
-		restaurantCategories = await GeneralService.GetAllCategoriesByRestaurantIdAsync(RestaurantId ?? CurrentDish.RestaurantId);
+		if(RestaurantId != null)
+		{
+			CurrentDish.RestaurantId = (int)RestaurantId;
+		}
+		restaurantCategories = await GeneralService.GetAllCategoriesByRestaurantIdAsync(CurrentDish.RestaurantId);
 	}
 
 	async Task DeleteDish()
 	{
 		await GeneralService.DeleteDishAsync((int) Id!);
-		NavigationManager.NavigateTo("/dishes");
+		NavigationManager.NavigateTo($"/menu/{CurrentDish.RestaurantId}");
 	}
 
 	async Task HandleSubmit()
@@ -77,12 +81,12 @@ else
 		if(Id is not null)
 		{
 			await GeneralService.UpdateDishAsync(CurrentDish,(int) Id);
-			NavigationManager.NavigateTo("/dishes");
+			NavigationManager.NavigateTo($"/menu/{CurrentDish.RestaurantId}");
 		}
 		else
 		{
 			await GeneralService.AddDishAsync(CurrentDish);
-			NavigationManager.NavigateTo("/dishes");
+			NavigationManager.NavigateTo($"/menu/{CurrentDish.RestaurantId}");
 		}
 	}
 }
