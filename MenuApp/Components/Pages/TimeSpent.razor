@@ -1,0 +1,34 @@
+﻿@page "/time"
+
+<h3>TimeSpent</h3>
+
+@foreach(var task in tasks)
+{
+	<p>@task.TaskString : @task.TimeMin minutes</p>
+}
+<p>Total: @tasks.Sum(t => t.TimeMin) minutes</p>
+
+@code {
+	List<TimedTask> tasks = new List<TimedTask>()
+	{
+		new TimedTask { TaskString = "First design of db and imagination of workflow (with momo)", TimeMin = 180 },
+		new TimedTask { TaskString = "Creating and initializing a repo", TimeMin = 20 },
+		new TimedTask { TaskString = "Add EF Core + Link project to our db + Update table", TimeMin = 40 },
+		new TimedTask { TaskString = "Check the git ignore", TimeMin = 20 },
+		new TimedTask { TaskString = "Add CRUD operations and page to add/edit/delete dish + switch to db factory", TimeMin = 105 },
+		new TimedTask { TaskString = "Add Restaurant and Category models", TimeMin = 30 },
+		new TimedTask { TaskString = "Add restaurants page and card", TimeMin = 50 },
+		new TimedTask { TaskString = "Restaurant Edit and Add page + Categories displayed recursively", TimeMin = 120 },
+		new TimedTask { TaskString = "Add category page", TimeMin = 80 },
+		new TimedTask { TaskString = "Add dish to the menu page", TimeMin = 80 },
+		new TimedTask { TaskString = "Add page for time spent on tasks", TimeMin = 20 }
+	};
+
+	public class TimedTask
+	{
+		public int TimeMin { get; set; }
+		public string TaskString { get; set; } = string.Empty;
+	}
+}
+
+
