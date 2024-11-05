@@ -32,11 +32,12 @@ namespace MenuApp.Services
 			var dish = await context.Dishes.FindAsync(id);
 			return dish;
 		}
-		public async Task AddDishAsync(Dish dish)
+		public async Task<int> AddDishAsync(Dish dish)
 		{
 			using var context = await _contextFactory.CreateDbContextAsync();
 			context.Dishes.Add(dish);	
 			await context.SaveChangesAsync();
+			return dish.Id;
 		}
 		public async Task UpdateDishAsync(Dish dish, int id)
 		{
@@ -58,6 +59,41 @@ namespace MenuApp.Services
 			if (dish != null)
 			{
 				context.Dishes.Remove(dish);
+				await context.SaveChangesAsync();
+			}
+		}
+
+		public async Task<List<Price>> GetAllPricesByDishIdAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var prices = await context.Prices.Where(p => p.DishId == id).ToListAsync();
+			return prices;
+		}
+		public async Task AddPriceAsync(Price price)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			context.Prices.Add(price);
+			await context.SaveChangesAsync();
+		}
+		public async Task UpdatePriceAsync(Price price, int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var dbPrice = await context.Prices.FindAsync(id);
+			if (dbPrice != null)
+			{
+				dbPrice.PriceName = price.PriceName;
+				dbPrice.PriceAmount = price.PriceAmount;
+
+				await context.SaveChangesAsync();
+			}
+		}
+		public async Task DeletePriceAsync(int id)
+		{
+			using var context = await _contextFactory.CreateDbContextAsync();
+			var price = await context.Prices.FindAsync(id);
+			if (price != null)
+			{
+				context.Prices.Remove(price);
 				await context.SaveChangesAsync();
 			}
 		}
