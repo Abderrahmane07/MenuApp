@@ -13,6 +13,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContextFactory<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IGeneralService, GeneralService>();
+builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 
 var app = builder.Build();
 

@@ -15,6 +15,16 @@
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        window.downloadQRCode = function (imageData, fileName) {
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = imageData;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+    </script>
 </body>
 
 </html>
