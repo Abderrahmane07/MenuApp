@@ -42,10 +42,11 @@ else
 }
 
 @code {
-        [Parameter]
-        public int? Id { get; set; }
-        List<Category> categories = new List<Category>();
-        List<Dish> dishes = new List<Dish>();
+    [Parameter]
+    public int? Id { get; set; }
+    List<Category> categories = new List<Category>();
+    List<Dish> dishes = new List<Dish>();
+    List<Price> prices = new List<Price>();
 
     private string qrCodeImage;
 
@@ -55,6 +56,12 @@ else
         {
             categories = await GeneralService.GetAllCategoriesByRestaurantIdAsync((int)Id);
             dishes = await GeneralService.GetAllDishesByRestaurantIdAsync((int)Id);
+
+            foreach(Dish dish in dishes)
+            {
+                List<Price> dishPrices = await GeneralService.GetAllPricesByDishIdAsync(dish.Id);
+                prices.AddRange(dishPrices);
+            }
 
             qrCodeImage = QrCodeService.GenerateQRCodeForMenu((int)Id);
         }
@@ -69,10 +76,23 @@ else
                     @foreach (var dish in dishes.Where(d => d.CategoryId == category.Id))
                     {
                         <li>
-                            <div>
-                                <strong>@dish.Name</strong>
-                                <span class="text-muted">@dish.Ingredients</span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@dish.Name</strong>
+                                    <span class="text-muted">@dish.Ingredients</span>
+                                </div>
                                 <a href="/edit-dish/@dish.Id" class="btn btn-sm btn-outline-primary ms-2">edit</a>
+                            </div>
+
+                            <!-- Pricing section -->
+                            <div class="d-flex flex-wrap mt-1">
+                                @foreach (var price in prices.Where(p => p.DishId == dish.Id))
+                            {
+                                <div class="me-3">
+                                    <span class="fw-bold">@price.PriceName:</span>
+                                    <span>@price.PriceAmount €</span>
+                                </div>
+                            }
                             </div>
                         </li>
                     }
