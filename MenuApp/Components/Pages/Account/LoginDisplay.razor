@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject NavigationManager Navigation
+@inject SignInManager<IdentityUser> SignInManager
+
+<AuthorizeView>
+    <Authorized>
+        <span>Hello, @context.User.Identity?.Name!</span>
+        <button class="btn btn-link" @onclick="LogOut">Log out</button>
+    </Authorized>
+    <NotAuthorized>
+        <a href="account/register">Register</a>
+        <a href="account/login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private async Task LogOut()
+    {
+        await SignInManager.SignOutAsync();
+        Navigation.NavigateTo("/");
+    }
+}
